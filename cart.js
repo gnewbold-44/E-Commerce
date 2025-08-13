@@ -125,6 +125,21 @@ function removeItemFromCart(itemId) {
     const itemIndex = cartItems.findIndex(item => item.id === itemId);
 
     if (itemIndex >= 0) {
+        const removedItem = cartItems[itemIndex];
+
+        // Track Remove from Cart event with Meta Pixel
+        if (typeof fbq !== 'undefined') {
+            fbq('track', 'RemoveFromCart', {
+                content_name: removedItem.name,
+                content_category: removedItem.brand,
+                content_ids: [removedItem.id.toString()],
+                content_type: 'product',
+                value: parseFloat(removedItem.price),
+                currency: 'USD',
+                quantity: removedItem.quantity
+            });
+        }
+
         cartItems.splice(itemIndex, 1);
 
         // Save updated cart

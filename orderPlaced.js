@@ -25,6 +25,16 @@ const cartItems = getCartItems();
 // Calculate order amount from cart items
 const orderAmount = cartItems.reduce((total, item) => total + (Number(item.price) * item.quantity), 0) || 200; // Default to 200 if calculation fails
 
+// Track Purchase event with Meta Pixel
+if (typeof fbq !== 'undefined' && cartItems.length > 0) {
+    fbq('track', 'Purchase', {
+        value: parseFloat(orderAmount),
+        currency: 'USD',
+        content_ids: cartItems.map(item => item.id.toString()),
+        content_type: 'product',
+        num_items: cartItems.reduce((total, item) => total + item.quantity, 0)
+    });
+}
 
 // Clear cookies after tracking the purchase
 const expiryDate = new Date();

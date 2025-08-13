@@ -176,6 +176,18 @@ function dynamicContentDetails(ob)
         // Update badge
         document.getElementById("badge").innerHTML = counter;
 
+        // Track Add to Cart event with Meta Pixel
+        if (typeof fbq !== 'undefined') {
+            fbq('track', 'AddToCart', {
+                content_name: ob.title,
+                content_category: ob.category,
+                content_ids: [id.toString()],
+                content_type: 'product',
+                value: parseFloat(ob.price),
+                currency: 'USD'
+            });
+        }
+
         // Show confirmation message
         const confirmationMsg = document.createElement('div');
         confirmationMsg.style.position = 'fixed';
@@ -199,6 +211,7 @@ function dynamicContentDetails(ob)
                 document.body.removeChild(confirmationMsg);
             }, 500);
         }, 2000);
+    };
     // Add "Buy Now" button (JoyMart style)
     let buyNowDiv = document.createElement('div')
     buyNowDiv.id = 'buyNow'
